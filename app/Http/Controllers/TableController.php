@@ -98,7 +98,7 @@ class TableController extends Controller
     public function saveCart(Request $request)
     {
         $validated = $request->validate([
-            'table' => 'required|integer',
+            'table' => 'required|integer|exists:tables,id', // Ensure table_id exists in tables table
             'cart' => 'required|array',
             'cart.*.id' => 'required|integer',
             'cart.*.name' => 'required|string',
