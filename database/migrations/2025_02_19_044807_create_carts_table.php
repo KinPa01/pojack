@@ -23,17 +23,20 @@ class CreateCartsTable extends Migration
             });
         }
 
-        Schema::create('carts', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('table_id');
-            $table->unsignedBigInteger('food_id');
-            $table->integer('quantity');
-            $table->decimal('price', 8, 2);
-            $table->timestamps();
+        // Check if the 'carts' table already exists
+        if (!Schema::hasTable('carts')) {
+            Schema::create('carts', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('table_id');
+                $table->unsignedBigInteger('food_id');
+                $table->integer('quantity');
+                $table->decimal('price', 8, 2);
+                $table->timestamps();
 
-            $table->foreign('table_id')->references('id')->on('tables')->onDelete('cascade');
-            $table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
-        });
+                $table->foreign('table_id')->references('id')->on('tables')->onDelete('cascade');
+                $table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
+            });
+        }
     }
 
     /**
