@@ -70,3 +70,4 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Deleted successfully']);
     }
 }
+// Compare this snippet from app/Models/Category.php:

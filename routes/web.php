@@ -33,6 +33,28 @@ Route::get('/tables', [TableController::class, 'index'])->middleware(['auth', 'v
 
 Route::get('/store/table-management', [TableController::class, 'manage'])->middleware(['auth', 'verified'])->name('store.TableManagement');
 
+Route::get('/store/food-category/{table}', function ($table) {
+    return Inertia::render('Store/FoodCategory', ['table' => $table]);
+})->middleware(['auth', 'verified'])->name('store.foodCategory');
+
+Route::get('/store/food-selection/{table}/alcoholic', function ($table) {
+    return Inertia::render('Store/FoodCategory', ['table' => $table, 'category' => 'Alcoholic Beverages']);
+})->middleware(['auth', 'verified'])->name('store.foodSelection.alcoholic');
+
+Route::get('/store/food-selection/{table}/non-alcoholic', function ($table) {
+    return Inertia::render('Store/FoodCategory', ['table' => $table, 'category' => 'Non-Alcoholic Beverages']);
+})->middleware(['auth', 'verified'])->name('store.foodSelection.nonAlcoholic');
+
+Route::get('/store/food-selection/{table}/mala', function ($table) {
+    return Inertia::render('Store/FoodCategory', ['table' => $table, 'category' => 'Mala']);
+})->middleware(['auth', 'verified'])->name('store.foodSelection.mala');
+
+Route::get('/store/food-selection/{table}/general', function ($table) {
+    return Inertia::render('Store/FoodCategory', ['table' => $table, 'category' => 'Food']);
+})->middleware(['auth', 'verified'])->name('store.foodSelection.general');
+
+Route::post('/save-cart', [TableController::class, 'saveCart'])->middleware(['auth', 'verified'])->name('saveCart');
+
 Route::get('/', function () {
     return Inertia::render('Store/Index');
 })->middleware(['auth', 'verified'])->name('store.index');

@@ -6,6 +6,7 @@ use App\Models\Table;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use App\Models\Cart;
 
 class TableController extends Controller
 {
@@ -15,7 +16,7 @@ class TableController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Store/Index', ['tables' => Table::all()]);
+        return view('tables.index', ['tables' => Table::all()]);
     }
 
     /**
@@ -23,7 +24,7 @@ class TableController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Tables/Create');
+        return view('tables.create');
     }
 
     /**
@@ -48,7 +49,7 @@ class TableController extends Controller
      */
     public function show(string $id)
     {
-        return Inertia::render('Tables/Show', ['table' => Table::findOrFail($id)]);
+        return view('tables.show', ['table' => Table::findOrFail($id)]);
     }
 
     /**
@@ -57,7 +58,7 @@ class TableController extends Controller
      */
     public function edit(string $id)
     {
-        return Inertia::render('Tables/Edit', ['table' => Table::findOrFail($id)]);
+        return view('tables.edit', ['table' => Table::findOrFail($id)]);
     }
 
     /**
@@ -92,5 +93,29 @@ class TableController extends Controller
     public function manage()
     {
         return Inertia::render('Store/TableManagement');
+    }
+
+    public function saveCart(Request $request)
+    {
+        $validated = $request->validate([
+            'table' => 'required|integer',
+            'cart' => 'required|array',
+            'cart.*.id' => 'required|integer',
+            'cart.*.name' => 'required|string',
+            'cart.*.price' => 'required|numeric',
+            'cart.*.quantity' => 'required|integer',
+        ]);
+
+        // Save the cart to the database
+        foreach ($validated['cart'] as $item) {
+            Cart::create([
+                'table_id' => $validated['table'],
+                'food_id' => $item['id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Cart saved successfully.');
     }
 }

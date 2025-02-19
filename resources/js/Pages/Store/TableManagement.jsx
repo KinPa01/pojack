@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function TableManagement() {
     const tableIcons = Array.from({ length: 45 }, (_, i) => i + 1);
+    const [savedTables, setSavedTables] = useState([]);
+
+    const handleSave = (tableNumber) => {
+        setSavedTables([...savedTables, tableNumber]);
+    };
 
     return (
         <AuthenticatedLayout>
@@ -13,8 +18,9 @@ export default function TableManagement() {
                     {tableIcons.map((number) => (
                         <Link
                             key={number}
-                            href={`/store/food-selection/${number}`}
-                            className="bg-gray-700 text-white text-center p-4 rounded-lg"
+                            href={route('store.foodCategory', { table: number })}
+                            className={`text-white text-center p-4 rounded-lg ${savedTables.includes(number) ? 'bg-green-500' : 'bg-gray-700'}`}
+                            onClick={() => handleSave(number)}
                         >
                             {number}
                         </Link>
