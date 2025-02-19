@@ -13,6 +13,16 @@ class CreateCartsTable extends Migration
      */
     public function up()
     {
+        // Ensure the 'tables' table exists before creating the 'carts' table
+        if (!Schema::hasTable('tables')) {
+            Schema::create('tables', function (Blueprint $table) {
+                $table->id();
+                $table->integer('number')->unique();
+                $table->enum('status', ['available', 'occupied']);
+                $table->timestamps();
+            });
+        }
+
         // Ensure the 'foods' table exists before creating the 'carts' table
         if (!Schema::hasTable('foods')) {
             Schema::create('foods', function (Blueprint $table) {

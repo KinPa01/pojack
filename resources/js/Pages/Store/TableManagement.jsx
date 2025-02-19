@@ -1,45 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { Link } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-const TableManagement = () => {
-    const [tables, setTables] = useState([]);
-    const [number, setNumber] = useState('');
+export default function TableManagement() {
+    const tableIcons = Array.from({ length: 45 }, (_, i) => i + 1);
+    const [savedTables, setSavedTables] = useState([]);
 
-    useEffect(() => {
-        fetchTables();
-    }, []);
-
-    const fetchTables = async () => {
-        const response = await axios.get('/api/tables');
-        setTables(response.data);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const response = await axios.post('/api/tables', { number });
-        setTables([...tables, response.data]);
-        setNumber('');
+    const handleSave = (tableNumber) => {
+        setSavedTables([...savedTables, tableNumber]);
     };
 
     return (
-        <div>
-            <h1>Table Management</h1>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    value={number}
-                    onChange={(e) => setNumber(e.target.value)}
-                    placeholder="Table Number"
-                />
-                <button type="submit">Add Table</button>
-            </form>
-            <ul>
-                {tables.map((table) => (
-                    <li key={table.id}>{table.number}</li>
-                ))}
-            </ul>
-        </div>
+        <AuthenticatedLayout>
+            <div className="container mx-auto px-4 py-8">
+                <h2 className="text-3xl font-bold mb-8">Table Management</h2>
+                <div className="grid grid-cols-5 gap-4 mt-8">
+                    {tableIcons.map((number) => (
+                        <Link
+                            key={number}
+                            href={route('store.foodCategory', { table: number })}
+                            className={`text-white text-center p-4 rounded-lg ${savedTables.includes(number) ? 'bg-green-500' : 'bg-gray-700'}`}
+                            onClick={() => handleSave(number)}
+                        >
+                            {number}
+                        </Link>
+                    ))}
+                </div>
+            </div>
+        </AuthenticatedLayout>
     );
-};
-
-export default TableManagement;
+}

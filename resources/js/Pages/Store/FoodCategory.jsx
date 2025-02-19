@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePage, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import axios from 'axios';
 
 const foodItems = [
     { id: 1, name: 'ข้าวผัดหมู', price: 50, image: '/images/fried_rice_pork.jpg' },
@@ -15,19 +14,11 @@ export default function FoodCategory() {
     const { table } = usePage().props;
     const [cart, setCart] = useState([]);
     const [isSaved, setIsSaved] = useState(false);
-    const [categories, setCategories] = useState([]);
-    const [name, setName] = useState('');
 
     useEffect(() => {
         console.log('Table:', table);
         console.log('Cart:', cart);
-        fetchCategories();
     }, [table, cart]);
-
-    const fetchCategories = async () => {
-        const response = await axios.get('/api/categories');
-        setCategories(response.data);
-    };
 
     const addToCart = (item) => {
         console.log('Adding to cart:', item);
@@ -51,13 +42,6 @@ export default function FoodCategory() {
                 console.log('Cart saved successfully');
             },
         });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const response = await axios.post('/api/categories', { name });
-        setCategories([...categories, response.data]);
-        setName('');
     };
 
     return (
@@ -116,24 +100,6 @@ export default function FoodCategory() {
                     <span className="text-xl">📋</span>
                     <span>รายการ</span>
                 </button>
-            </div>
-            {/* ฟอร์มเพิ่มหมวดหมู่อาหาร */}
-            <div>
-                <h1>Food Categories</h1>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Category Name"
-                    />
-                    <button type="submit">Add Category</button>
-                </form>
-                <ul>
-                    {categories.map((category) => (
-                        <li key={category.id}>{category.name}</li>
-                    ))}
-                </ul>
             </div>
         </AuthenticatedLayout>
     );
