@@ -13,6 +13,16 @@ class CreateCartsTable extends Migration
      */
     public function up()
     {
+        // Ensure the 'foods' table exists before creating the 'carts' table
+        if (!Schema::hasTable('foods')) {
+            Schema::create('foods', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->decimal('price', 8, 2);
+                $table->timestamps();
+            });
+        }
+
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('table_id');

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
 class Cart extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'table_id',
         'food_id',
@@ -19,8 +22,8 @@ class Cart extends Model
         return $this->belongsTo(Table::class);
     }
 
-    public function Category()
+    public function CategoryController()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(CategoryController::class);
     }
 }

@@ -92,6 +92,12 @@ class TableController extends Controller
 
     public function manage()
     {
+        $tables = Table::all();
+        return response()->json($tables);
+    }
+
+    public function manage()
+    {
         return Inertia::render('Store/TableManagement');
     }
 
